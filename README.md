@@ -1,5 +1,6 @@
-<h1> แบบทดสอบ Backend Developer </h1><br>
-ศักนรินทร์ ถิ่นสพุง (เล็ก)
+<h3> แบบทดสอบ Backend Developer</h3><br>
+<h3>ศักนรินทร์ ถิ่นสพุง (เล็ก)</h3>
+
 
 # 1. สร้างระบบ Authentication ด้วย NestJS
 register <br>
