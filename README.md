@@ -1,21 +1,21 @@
 # 1. สร้างระบบ Authentication ด้วย NestJS
-------> register
+------> register <br>
 curl -X POST http://localhost:3000/api/auth/register
 -H "Content-Type: application/json"
 --data-raw '{ "name": "{name}", "email": "{email}", "password": "{password}" }'
 
-------> login
+------> login <br>
 curl -X POST http://localhost:3000/api/auth/login
 -H "Content-Type: application/json"
 --data-raw '{ "email": "{email}", "password": "{password}" }'
 
-------> logout
+------> logout <br>
 curl -X GET 'http://localhost:3000/api/auth/logout'
 -H 'Authorization: {Bearer YOUR_ACCESS_TOKEN_HERE}'
 
 
 # 2. สร้าง API สำหรับจัดการสินค้า
-------> product insert
+------> product insert <br>
 curl -X POST 'http://localhost:3000/api/products/action'
 --form 'imageupload={file}'
 --form 'price="{price}"'
