@@ -2,12 +2,19 @@
 register <br>
 curl -X POST http://localhost:3000/api/auth/register <br>
 -H "Content-Type: application/json" <br>
---data-raw '{ "name": "{name}", "email": "{email}", "password": "{password}" }'
+--data-raw '{ <br>
+  "name": "{name}", <br>
+  "email": "{email}",
+  "password": "{password}" <br>
+}' <br>
 
 login <br>
 curl -X POST http://localhost:3000/api/auth/login <br>
 -H "Content-Type: application/json" <br>
---data-raw '{ "email": "{email}", "password": "{password}" }' <br>
+--data-raw '{<br>
+  "email": "{email}", <br>
+  "password": {password}" <br>
+}' <br>
 
 logout <br>
 curl -X GET 'http://localhost:3000/api/auth/logout' <br>
@@ -44,7 +51,12 @@ curl -X DELETE "http://localhost:3000/api/products/action?id=all" <br>
 # 4. ออกแบบระบบจัดการคำสั่งซื้อ
 orders insertcurl -POST 'http://localhost:3000/api/orders' <br>
 -H 'Content-Type: application/json' <br>
---data '{ "productId": {product id}, "qty": {qty number}, "price":{price number} }' <br>
+--data '{ <br>
+  "productId": {product id}, <br>
+  "qty": {qty number}, <br>
+  "price":{price number} <br>
+}' <br>
+
 orders get all <br>
 curl -GET 'http://localhost:3000/api/orders?find=all' <br>
 orders get id <br>
