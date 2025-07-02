@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 1. สร้างระบบ Authentication ด้วย NestJS
+------> register
+curl -X POST http://localhost:3000/api/auth/register
+-H "Content-Type: application/json"
+--data-raw '{ "name": "{name}", "email": "{email}", "password": "{password}" }'
 
-## Getting Started
+------> login
+curl -X POST http://localhost:3000/api/auth/login
+-H "Content-Type: application/json"
+--data-raw '{ "email": "{email}", "password": "{password}" }'
 
-First, run the development server:
+------> logout
+curl -X GET 'http://localhost:3000/api/auth/logout'
+-H 'Authorization: {Bearer YOUR_ACCESS_TOKEN_HERE}'
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 2. สร้าง API สำหรับจัดการสินค้า
+------> product insert
+curl -X POST 'http://localhost:3000/api/products/action'
+--form 'imageupload={file}'
+--form 'price="{price}"'
+--form 'name="{name}"'
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+------> product update
+curl -X PUT 'http://localhost:3000/api/products/action?id={product id}'
+--form 'imageupload={file}'
+--form 'price="{price}"'
+--form 'name="{name}"'
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+------> get product all
+curl -X GET "http://localhost:3000/api/products/action?find=all"
+get product id
+curl -X GET "http://localhost:3000/api/products/action?id={product id}"
+get product delete
+curl -X DELETE "http://localhost:3000/api/products/action?id=all"
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+# 3. เพิ่มระบบ Caching ด้วย Redis
+สร้างระบบ Caching สำหรับ API /products โดย:
+1. ใช้ Redis เก็บ Cache ของข้อมูลสินค้าทั้งหมด
+2. เมื่อมีการเพิ่ม/แก้ไข/ลบสินค้า ให้ล้าง Cache ที่เกี่ยวข้อง
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 4. ออกแบบระบบจัดการคำสั่งซื้อ
+orders insertcurl -POST 'http://localhost:3000/api/orders'
+-H 'Content-Type: application/json'
+--data '{ "productId": {product id}, "qty": {qty number}, "price":{price number} }'
+orders get all
+curl -GET 'http://localhost:3000/api/orders?find=all'
+orders get id
+curl -GET 'http://localhost:3000/api/orders?id={order id}'
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 5. ออกแบบชื่อ Endpoint และตั้งชื่อตัวแปรในระบบ
+ออกแบบโครงสร้างชื่อ Endpoint และตัวแปรสำหรับระบบจัดการสินค้า โดย:
+1. ชื่อ Endpoint ต้องเป็น RESTful
+2. ตัวแปรในโค้ดต้องมีความหมายชัดเจน
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# 6. สร้าง Middleware สำหรับ Logging
+พัฒนา Middleware สำหรับบันทึก Log ทุกครั้งที่มีการเรียกใช้งาน API โดย:
+1. เก็บข้อมูล URL, HTTP Method, และ Response Time ลงในไฟล์
+2. ใช้ NestJS Middleware
+
+
+# 7. สร้าง Dynamic Module ใน NestJS
+สร้าง Dynamic Module สำหรับการเชื่อมต่อฐานข้อมูล โดย:
+1. รองรับการเชื่อมต่อหลายฐานข้อมูลพร้อมกัน
+2. ใช้ Dynamic Module ของ NestJS
+
+# 8. ระบบ Queue Management ด้วย Redis
+สร้างระบบจัดการ Queue ในการส่ง Email โดย:
+1. ใช้ Bull.js + Redis ในการจัดการ Queue
+2. พัฒนา API สำหรับเพิ่มงานเข้า Queue และตรวจสอบสถานะ
+******* หมายเหตุ :Bull.js ไม่รองรับ next15 จึเปลี่ยนมาใช้ bullmq ซึ่งเป็นเวอร์ชั่นใหม่ของ bull
+
+# 9. ออกแบบระบบ Export ข้อมูลเป็นไฟล์ CSV
+curl -X GET 'http://localhost:3000/api/products/export'
+
+# 10. เพิ่มระบบ Refresh Token
+พัฒนาระบบ Refresh Token ใน NestJS โดย:
+1. เก็บ Refresh Token ในฐานข้อมูล MySQL
+2. เพิ่ม Endpoint /auth/refresh สำหรับ Refresh Access Token
+refresh
+curl -X GET 'http://localhost:3000/api/auth/refresh'
+-H 'Authorization: {Bearer YOUR_ACCESS_TOKEN_HERE}'
